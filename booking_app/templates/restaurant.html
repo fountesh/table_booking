@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{ restaurant }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>СТОЛИКИ</h1>
+    {% for table in restaurant.tables.all %}
+        <a href="/table/{{ table.id }}" style="text-decoration: none"><h3>{{ table }}</h3></a>
+    {% endfor %}
+{% endblock %}

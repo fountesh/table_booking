@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title> BOOKING </title>
+{% endblock %}
+
+{% block content %}
+  <h1>УСІ ЗАМОВЛЕННЯ:</h1>
+  <ul>
+    {% for booking in bookings %}
+      <li><h3>{{ booking }}</h3></li>
+    {% endfor %}
+  </ul>
+
+  <h1>ЗРОБИТИ ЗАМОВЛЕННЯ</h1>
+
+  <button>зробити замовлення</button>
+{% endblock %}

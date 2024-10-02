@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Restourant(models.Model):
+class Restaurant(models.Model):
     title = models.CharField(max_length=100)
     adress = models.CharField(max_length=100)
 
@@ -19,7 +19,7 @@ class Table(models.Model):
     ]
     
     table_id = models.AutoField(primary_key=True)
-    res_name = models.ForeignKey(Restourant, on_delete=models.CASCADE)
+    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     price = models.IntegerField()
     num = models.IntegerField()
     status = models.CharField(max_length=20, choices=TABLE_STATUS, default='вільний')
@@ -34,7 +34,7 @@ class Booking(models.Model):
         ('Неприйшов', 'Неприйшов'),
     ]
     
-    res_name = models.ForeignKey(Restourant, on_delete=models.CASCADE)
+    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table_id = models.ForeignKey(Table, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     data = models.DateField()
