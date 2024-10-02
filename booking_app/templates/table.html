@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{ table }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>ІНФОРМАЦІЯ ПРО СТОЛИКИ</h1>
+    <h3>ціна</h3>
+    {{ table.price }} UAH
+{% endblock %}

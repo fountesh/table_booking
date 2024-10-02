@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Restourant, Table, Booking
+from .models import Restaurant, Table, Booking
 
 # Register your models here.
 
-@admin.register(Restourant)
+@admin.register(Restaurant)
 class RestourantAdmin(admin.ModelAdmin):
     list_display = ('title', 'adress')
     search_fields = ('title', 'adress')

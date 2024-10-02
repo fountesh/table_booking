@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Main page</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Вітаємо на сайті реєстрування</h1>
+    {% for restaurant in restaurants %}
+        <a href="/restaurant/{{ restaurant.id }}" style="text-decoration: none"><h2>{{ restaurant }}</h2></a>
+        {% for table in restaurant.tables.all %}
+             <a href="/table/{{ table.id }}" style="text-decoration: none">{{ table }}</a><p>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
