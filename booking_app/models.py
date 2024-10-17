@@ -19,7 +19,7 @@ class Table(models.Model):
     ]
     
     table_id = models.AutoField(primary_key=True)
-    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='tables')
     price = models.IntegerField()
     num = models.IntegerField()
     status = models.CharField(max_length=20, choices=TABLE_STATUS, default='вільний')
@@ -34,8 +34,8 @@ class Booking(models.Model):
         ('Неприйшов', 'Неприйшов'),
     ]
     
-    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    table_id = models.ForeignKey(Table, on_delete=models.CASCADE)
+    res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='bookings')
+    table_id = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='bookings')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     data = models.DateField()
     status = models.CharField(max_length=20, choices=BOOKING_STATUS, default='В очікуванні')
@@ -49,3 +49,6 @@ class Booking(models.Model):
         else:
             self.table_id.status = 'вільний'
         self.table_id.save()
+
+    def __str__(self):
+        return f"{self.res_name}, {self.table_id}, {self.status}"

@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}
-  <title> BOOKING </title>
-{% endblock %}
-
 {% block content %}
-  <h1>УСІ ЗАМОВЛЕННЯ:</h1>
-  <ul>
-    {% for booking in bookings %}
-      <li><h3>{{ booking }}</h3></li>
-    {% endfor %}
-  </ul>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-6">Усі бронювання</h1>
 
-  <h1>ЗРОБИТИ ЗАМОВЛЕННЯ</h1>
+    <ul class="list-group">
+        {% for booking in bookings %}
+            <li class="list-group-item {% if booking.status == 'Прийшов' %}list-group-item-success{% elif booking.status == 'В очікуванні' %}list-group-item-warning{% else %}list-group-item-danger{% endif %}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Ресторан:</strong> {{ booking.res_name }} |
+                        <strong>Столик №:</strong> {{ booking.table_id.num }} |
+                        <strong>Дата:</strong> {{ booking.data|date:"d.m.Y" }} |
+                        <strong>Замовник:</strong> {{ booking.user_id.get_full_name|default:booking.user_id.username }}
+                    </div>
+                    <span class="badge {% if booking.status == 'Прийшов' %}bg-success{% elif booking.status == 'В очікуванні' %}bg-warning{% else %}bg-danger{% endif %} rounded-pill">
+                        {{ booking.status }}
+                    </span>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-center text-muted">Наразі немає жодного бронювання</li>
+        {% endfor %}
+    </ul>
 
-  <button>зробити замовлення</button>
+    <div class="mt-4">
+        <a class="btn btn-primary">
+            Забронювати столик
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import *
 from .models import Restaurant, Table, Booking
 
 def index(request):
@@ -15,6 +16,20 @@ def index(request):
         'index.html',
         context=context
     )
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+        
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
+        
 
 def restaurant(request, restaurant_id):
     cur_res = Restaurant.objects.filter(id=restaurant_id).first()
@@ -36,21 +51,18 @@ def table(request, table_id):
         'table': cur_tab
     }
 
+    print(Table.objects.all())
+
     return render(
         request,
         'table.html',
         context=context
     )
 
-def booking(request):
-    booking = Booking.objects.all()
-
+def booking_list(request):
+    bookings = Booking.objects.all()
+    
     context = {
-        'booking': booking
+        'bookings': bookings
     }
-
-    return render(
-        request,
-        'booking.html',
-        context=context    
-    )
+    return render(request, 'booking.html', context)

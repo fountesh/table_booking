@@ -6,7 +6,20 @@
 
 {% block content %}
     <h1>СТОЛИКИ</h1>
+    <div class="row g-5">
+
     {% for table in restaurant.tables.all %}
-        <a href="/table/{{ table.id }}" style="text-decoration: none"><h3>{{ table }}</h3></a>
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{ table.num }}</h5>
+              <p class="card-text">{{ table.price }}.</p>
+              <p class="card-text">{{ table.status }}.</p>
+              <a href="#" class="btn btn-primary">View</a>
+            </div>
+          </div>
+        </div>
+    </div>
     {% endfor %}
 {% endblock %}

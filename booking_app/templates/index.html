@@ -6,10 +6,25 @@
 
 {% block content %}
     <h1>Вітаємо на сайті реєстрування</h1>
+    <div class="row g-5">
+          
     {% for restaurant in restaurants %}
-        <a href="/restaurant/{{ restaurant.id }}" style="text-decoration: none"><h2>{{ restaurant }}</h2></a>
-        {% for table in restaurant.tables.all %}
-             <a href="/table/{{ table.id }}" style="text-decoration: none">{{ table }}</a><p>
-        {% endfor %}
+    <div class="col-md-6 col-lg-4">
+    <div class="card">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ restaurant.title }}</h5>
+          <p class="card-text">{{ restaurant.adress }}.</p>
+          {% for table in restaurant.tables.all %}
+             <a>{{ table }}</a><p>
+          {% endfor %}
+          <a href="/restaurant/{{ restaurant.id }}" class="btn btn-primary">View</a>
+        </div>
+      </div>
+    </div>
+        
+        
     {% endfor %}
+             </div>
+
 {% endblock %}
