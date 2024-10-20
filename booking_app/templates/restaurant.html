@@ -16,7 +16,12 @@
               <h5 class="card-title">{{ table.num }}</h5>
               <p class="card-text">{{ table.price }}.</p>
               <p class="card-text">{{ table.status }}.</p>
-              <a href="#" class="btn btn-primary">View</a>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="table_id" value="{{table.table_id}}">
+                <input type="date" name="data">
+                <button type="submit" class="btn btn-primary">Забронювати</button>
+            </form>        
             </div>
           </div>
         </div>
