@@ -52,6 +52,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'booking_proj.urls'
 
+LOGIN_URL = 'login'  # тепер вказуємо на нашу view
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

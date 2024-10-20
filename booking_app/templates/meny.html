@@ -9,9 +9,18 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/booking">Booking</a>
           </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+          <span class="navbar-text text-primary">{{ user.username }}, </span>
           <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            <a class="nav-link active" aria-current="page" href="logout/">logout</a>
           </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="login/">login</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </div>
