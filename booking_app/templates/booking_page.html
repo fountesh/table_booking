@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Бронювання столика</h1>
+    <p>Ресторан: <strong>{{ restaurant.title }}</strong></p>
+    <p>Адреса: <strong>{{ restaurant.adress }}</strong></p>
+    <p>Ви обрали столик №{{ selected_table.num }} ({{ selected_table.get_status_display }})</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="table_id" value="{{ selected_table.table_id }}">
+        <input type="hidden" name="restaurant_id" value="{{ restaurant.id }}">
+        
+        <div class="mb-3">
+            <label for="date" class="form-label">Дата:</label>
+            <input type="date" class="form-control" name="date" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="start_time" class="form-label">Час початку:</label>
+            <input type="time" class="form-control" name="start_time" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="end_time" class="form-label">Час закінчення:</label>
+            <input type="time" class="form-control" name="end_time" required>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Підтвердити бронювання</button>
+    </form>
+</div>
+{% endblock %}
+

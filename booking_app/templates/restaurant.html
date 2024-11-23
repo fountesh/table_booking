@@ -14,32 +14,10 @@
             <img src="..." class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">{{ table.num }}</h5>
-              <p class="card-text">{{ table.price }}.</p>
-              <p class="card-text">{{ table.status }}.</p>
+              <p class="card-text">Ціна: {{ table.price }}</p>
+              <p class="card-text">Статус: {{ table.status }}</p>
               <form method="post">
-                <form method="POST">
-                  {% csrf_token %}
-                  <div class="mb-3">
-                      <label for="table_id" class="form-label">Виберіть столик:</label>
-                      <select name="table_id" id="table_id" class="form-select" required>
-                          {% for table in restaurant.tables.all %}
-                              <option value="{{ table.table_id }}">Столик №{{ table.num }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="mb-3">
-                      <label for="data" class="form-label">Дата:</label>
-                      <input type="date" name="data" id="data" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="start_time" class="form-label">Час початку:</label>
-                      <input type="time" name="start_time" id="start_time" class="form-control" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="end_time" class="form-label">Час завершення:</label>
-                      <input type="time" name="end_time" id="end_time" class="form-control" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Забронювати</button>
+                <a href="{% url 'booking_page' %}?table_id={{ table.table_id }}&restaurant_id={{ restaurant.id }}" class="btn btn-primary">Забронювати</a>                
               </form>
             </form>        
             </div>

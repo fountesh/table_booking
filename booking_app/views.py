@@ -136,6 +136,53 @@ def booking_list(request):
     return render(request, 'booking.html', context)
 
 @login_required
+def booking_page(request):
+    table_id = request.GET.get('table_id')
+    restaurant_id = request.GET.get('restaurant_id')
+
+    # Отримуємо ресторан і перевіряємо, чи столик належить йому
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    selected_table = restaurant.tables.filter(table_id=table_id).first()
+
+    if not selected_table:
+        messages.error(request, "Обраний столик не належить цьому ресторану.")
+        return redirect('restaurant', restaurant_id=restaurant_id)
+
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        if not all([table_id, date, start_time, end_time]):
+            messages.error(request, "Усі поля обов'язкові для заповнення.")
+        else:
+            conflict = Booking.objects.filter(
+                table_id=table_id,
+                data=date,
+                start_time__lt=end_time,
+                end_time__gt=start_time
+            ).exists()
+
+            if conflict:
+                messages.error(request, "Столик уже заброньовано на цей час.")
+            else:
+                Booking.objects.create(
+                    res_name=restaurant,
+                    table_id=selected_table,
+                    user_id=request.user,
+                    data=date,
+                    start_time=start_time,
+                    end_time=end_time,
+                )
+                messages.success(request, "Ваше бронювання успішно створено!")
+                return redirect('restaurant', restaurant_id=restaurant_id)
+
+    return render(request, 'booking_page.html', {
+        'selected_table': selected_table,
+        'restaurant': restaurant,
+    })
+
+@login_required
 def update_booking_status(request, booking_id):
     if not request.user.is_superuser:
         return HttpResponseForbidden("Доступ заборонено")
