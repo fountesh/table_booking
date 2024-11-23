@@ -17,10 +17,30 @@
               <p class="card-text">{{ table.price }}.</p>
               <p class="card-text">{{ table.status }}.</p>
               <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="table_id" value="{{table.table_id}}">
-                <input type="date" name="data">
-                <button type="submit" class="btn btn-primary">Забронювати</button>
+                <form method="POST">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                      <label for="table_id" class="form-label">Виберіть столик:</label>
+                      <select name="table_id" id="table_id" class="form-select" required>
+                          {% for table in restaurant.tables.all %}
+                              <option value="{{ table.table_id }}">Столик №{{ table.num }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="mb-3">
+                      <label for="data" class="form-label">Дата:</label>
+                      <input type="date" name="data" id="data" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="start_time" class="form-label">Час початку:</label>
+                      <input type="time" name="start_time" id="start_time" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="end_time" class="form-label">Час завершення:</label>
+                      <input type="time" name="end_time" id="end_time" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Забронювати</button>
+              </form>
             </form>        
             </div>
           </div>

@@ -72,8 +72,34 @@ def restaurant(request, restaurant_id):
     if request.method == "POST":
         table_id = request.POST.get("table_id")
         data = request.POST.get("data")
+        start_time = request.POST.get("start_time")
+        end_time = request.POST.get("end_time")
+
+        # Перевірка конфліктів
+        existing_bookings = Booking.objects.filter(
+            table_id=table_id,
+            data=data,
+            start_time__lt=end_time,  # Час початку існуючого бронювання раніше закінчення нового
+            end_time__gt=start_time   # Час закінчення існуючого бронювання пізніше початку нового
+        )
+
+        if existing_bookings.exists():
+            messages.error(request, "Цей столик вже заброньовано на вибраний час!")
+            return redirect('restaurant', restaurant_id=restaurant_id)
+
+        # Створення бронювання
         user = request.user
-        Booking.objects.create(res_name=cur_res, table_id= Table.objects.get(pk= table_id), user_id = user, data=data)
+        Booking.objects.create(
+            res_name=cur_res,
+            table_id=Table.objects.get(pk=table_id),
+            user_id=user,
+            data=data,
+            start_time=start_time,
+            end_time=end_time
+        )
+
+        messages.success(request, "Столик успішно заброньовано!")
+        return redirect('restaurant', restaurant_id=restaurant_id)
 
     context = {
         'restaurant': cur_res
@@ -84,6 +110,7 @@ def restaurant(request, restaurant_id):
         'restaurant.html',
         context=context
     )
+
 @login_required
 def table(request, table_id):
     cur_tab = Table.objects.filter(id=table_id).first()
