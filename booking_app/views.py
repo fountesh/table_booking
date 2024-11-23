@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Restaurant, Table, Booking
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
 
 @login_required
 def index(request):
@@ -105,3 +107,30 @@ def booking_list(request):
         'bookings': bookings
     }
     return render(request, 'booking.html', context)
+
+@login_required
+def update_booking_status(request, booking_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Доступ заборонено")
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(Booking.BOOKING_STATUS).keys():
+            booking.status = new_status
+            booking.save()
+            messages.success(request, f"Статус бронювання оновлено до '{new_status}'")
+        else:
+            messages.error(request, "Недійсний статус")
+    return redirect('booking')
+
+@login_required
+def delete_booking(request, booking_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Доступ заборонено")
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.method == 'POST':
+        booking.delete()
+        messages.success(request, "Бронювання успішно видалено")
+    return redirect('booking')

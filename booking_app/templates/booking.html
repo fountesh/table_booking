@@ -1,33 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6">Усі бронювання</h1>
-
-    <ul class="list-group">
-        {% for booking in bookings %}
-            <li class="list-group-item {% if booking.status == 'Прийшов' %}list-group-item-success{% elif booking.status == 'В очікуванні' %}list-group-item-warning{% else %}list-group-item-danger{% endif %}">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>Ресторан:</strong> {{ booking.res_name }} |
-                        <strong>Столик №:</strong> {{ booking.table_id.num }} |
-                        <strong>Дата:</strong> {{ booking.data|date:"d.m.Y" }} |
-                        <strong>Замовник:</strong> {{ booking.user_id.get_full_name|default:booking.user_id.username }}
-                    </div>
-                    <span class="badge {% if booking.status == 'Прийшов' %}bg-success{% elif booking.status == 'В очікуванні' %}bg-warning{% else %}bg-danger{% endif %} rounded-pill">
-                        {{ booking.status }}
-                    </span>
-                </div>
-            </li>
-        {% empty %}
-            <li class="list-group-item text-center text-muted">Наразі немає жодного бронювання</li>
-        {% endfor %}
-        </ul>
-
-    <div class="mt-4">
-        <!-- <a class="btn btn-primary">
-            Забронювати столик
-        </a> -->
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Список бронювань</h1>
+    
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ресторан</th>
+                    <th>Столик №</th>
+                    <th>Дата</th>
+                    <th>Замовник</th>
+                    <th>Статус</th>
+                    {% if request.user.is_superuser %}
+                        <th>Дії</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr class="
+                        {% if booking.status == 'Прийшов' %}table-success
+                        {% elif booking.status == 'В очікуванні' %}table-warning
+                        {% else %}table-danger
+                        {% endif %}
+                    ">
+                        <td>{{ booking.res_name }}</td>
+                        <td>{{ booking.table_id.num }}</td>
+                        <td>{{ booking.data|date:"d.m.Y" }}</td>
+                        <td>{{ booking.user_id.get_full_name|default:booking.user_id.username }}</td>
+                        <td>{{ booking.status }}</td>
+                        {% if request.user.is_superuser %}
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <form method="POST" action="{% url 'update_booking_status' booking.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="Прийшов">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle"></i> Прийшов
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'update_booking_status' booking.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="Неприйшов">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-x-circle"></i> Не прийшов
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'delete_booking' booking.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Видалити
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Наразі немає жодного бронювання</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
