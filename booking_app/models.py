@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 
@@ -33,11 +34,13 @@ class Booking(models.Model):
         ('В очікуванні', 'В очікуванні'),
         ('Неприйшов', 'Неприйшов'),
     ]
-    
+
     res_name = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='bookings')
     table_id = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='bookings')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     data = models.DateField()
+    start_time = models.TimeField(default=timezone.now())  # Час початку бронювання
+    end_time = models.TimeField(default=timezone.now())    # Час завершення бронювання
     status = models.CharField(max_length=20, choices=BOOKING_STATUS, default='В очікуванні')
 
     def save(self, *args, **kwargs):

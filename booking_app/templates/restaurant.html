@@ -14,13 +14,11 @@
             <img src="..." class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">{{ table.num }}</h5>
-              <p class="card-text">{{ table.price }}.</p>
-              <p class="card-text">{{ table.status }}.</p>
+              <p class="card-text">Ціна: {{ table.price }}</p>
+              <p class="card-text">Статус: {{ table.status }}</p>
               <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="table_id" value="{{table.table_id}}">
-                <input type="date" name="data">
-                <button type="submit" class="btn btn-primary">Забронювати</button>
+                <a href="{% url 'booking_page' %}?table_id={{ table.table_id }}&restaurant_id={{ restaurant.id }}" class="btn btn-primary">Забронювати</a>                
+              </form>
             </form>        
             </div>
           </div>
